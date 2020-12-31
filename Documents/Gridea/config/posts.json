@@ -1,0 +1,206 @@
+{
+  "posts": [
+    {
+      "content": "# 1.mysql 的安装\n> \n## ",
+      "data": {
+        "title": "mysql用法笔记",
+        "date": "2020-11-09 09:46:51",
+        "tags": [
+          "工具",
+          "mysql"
+        ],
+        "published": true,
+        "hideInList": false,
+        "feature": "https://tse4-mm.cn.bing.net/th/id/OIP.PR_cH53n_S8E309aPzw-ugAAAA?pid=Api&rs=1",
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "mysql-yong-fa-bi-ji"
+    },
+    {
+      "content": "# git的使用方法\n\n## 基本命令\n\n> 暂存区(将你的工作结果暂时保存,以便对比)\n\n```shell\ngit add \t\t\\\\添加到暂存区\ngit status \t\t\\\\查看状态\ngit diff \t\t\\\\查看修改后的文件和暂存区的区别\ngit restore filename \\\\恢复文件到暂存区的状态(丢弃工作区的改动)\ngit restore --staged filename  \t\t\\\\取消文件在暂存区(无论是删除还是多次修改,状态均为未提交,)\n\n```\n\n> HEAD(指向你最后一次提交的结果,相当于游戏里的存档)当前版本\n\n```shell\ngit commit -m \"提交的信息\"\n\t\t   -a 可以将所有已跟踪文件中的执行修改或删除操作的文件都提交到本地仓库，即使它们没有经过git add添加到暂存区(新添加的文件不可以提交到仓库,建议不使用 -a)\n\t\t   --amend 追加提交(在不增加一个新的commid-id的情况下)\ngit log 查看提交日志\n\t\t   --pretty=online 一行展示\n\t\t   \t\t\tshort 简短展示\ngit log --graph --pretty=oneline --abbrev-commit\ngit reset HEAD^ 回退到上一个版本\n\t\t  HEAD^^ 上上一个版本\n\t\t  HEAD~100 上一百个版本\ngit reflog 查看每一次的commit命令(意味着查看到版本号就可以回到相应的版本去)\ngit checkout -- filename 撤销文件在工作区的修改\ngit rm filename 删除并且git add\n\t\t   \n```\n\n> 远程仓库\n\n```shell\ngit remote add origin git@github.com:peapio/gittest.git\n// 关联到远程仓库\ngit push origin master\nmaster不存在,将会新建\n$ git push origin :master\n# 等同于\n$ git push origin --delete master\n表示删除master分支,相当于推送空的本地文件到远程分支\n如果当前分支和远程分支存在追踪关系,则本地分支和远程分支都可以省略\ngit push -u origin master\n上面命令将本地的master分支推送到origin主机，同时指定origin为默认主机，后面就可以不加任何参数使用git push了。\n```\n\n## ssh key的添加\n\n### 1.设置git的username和email\n\n```sh\t\ngit config --global user.name \"peapio\"\ngit config --global user.email  \"aqiiii@yeah.net\"\t//github对应数据\ngit config -l查看当前配置\ngit config color.ui true \t\tgit提示更明显\n```\n\n\n\n### 2.检查是否存在SSH Key\n\n```sh\ncd .ssh\nll\n//查看是否有 id_rsa 和 id_rsa.pub 如果存在说明有SSH Key\n```\n\n### 3.生成SSH Key\n\n```sh\nssh-keygen -t rsa -C \"aqiiii@yeah.net\"\nenter\ncat id_rsa.pub //复制密钥\n```\n\n### 4.GitHub添加SSH Key\n\n设置->SSH\n\n### 5.验证和修改\n\n```sh\nsh -T git@github.com\n//运行结果出现类似如下\nHi peapio! You've successfully authenticated, but GitHub does not provide shell access.\n```\n\n> git支持多种协议,包括https,ssh,但ssh协议速度最快\n\n## git分支管理\n\n### 创建与合并\n\n```sh\ngit checkout -b dev === git switch -c dev\n创建并切换到dev分支\n相当于\ngit branch dev\ngit checkout dev === git switch dev\n\ngit branch\n查看当前分支\ngit meage dev 当前分支与dev分支合并(该分支变得和dev相同,在本分支没有改变之前时)\ngit merge --no-ff -m \"merge with no-ff\" dev\n合并时保留信息,也就是多一个commit\ngit branch -d dev\n删除dev分支\ngit branch -D dev\n强制删除(适用于被删除的分支没有被merge)\n\n\n```\n\n团队合作时,分支应该看起来这样\n\n![img](https://www.liaoxuefeng.com/files/attachments/919023260793600/0)\n\n### 修复bug分支\n\n```sh\ngit stach \n储藏工作现场,以便于需要临时切换到别的分支,\ngit stach list 查看保存的工作现场\ngit stach apply\t\t恢复\ngit stach drop\t \t删除\n或者\ngit stach pop \t\t恢复并删除\ngit stash apply stash@{0} 恢复指定\n```\n\n```sh\ngit cherry-pick 4c805e2\n复制一次特定提交到当前分支(用与bug修复)\n```\n\n### Feature分支\n\n> 每添加一个新功能可以新建一个Feature分支\n\n```sh\ngit remote -v \t\t查看远程仓库的信息\n\n```\n\n### git标签\n\n```sh\ngit tag <name>\ngit tag \t\t查看所有标签\ngit tag -d v1.0 删除标签\n因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。\ngit push origin <tagname>\t\t推送某个标签到远程\ngit oush origin --tags\t\t\t推送所有未推送到远程的本地标签\ngit push origin :refs/tags/<tagname> 删除一个远程标签\ngit tag <name> <commitid> 为忘记打标签的提交打标签\ngit show <tagname> 查看标签提交详细内容\ngit tag -a <tagname> -m \"content\" <commit_id\n```\n\n> :heavy_exclamation_mark:注意,标签总是和某个commit挂钩。如果这个commit既出现在master分支，又出现在dev分支，那么在这两个分支上都可以看到这个标签。\n",
+      "data": {
+        "title": "关于git的笔记",
+        "date": "2020-11-08 21:10:49",
+        "tags": [
+          "linux",
+          "工具"
+        ],
+        "published": true,
+        "hideInList": false,
+        "feature": "https://tse4-mm.cn.bing.net/th/id/OIP.wAnWjnjJgVlXTPokPXFrVwHaE8?pid=Api&rs=1",
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "guan-yu-git-de-bi-ji"
+    },
+    {
+      "content": "\n## 1.latex的结构\n\n```latex\n% 导言区\n\\documentclass{article} %一种文档类，也可以是book,report,letter\n\\usepackage{ctex}\t%使用中文包\n\\title{My First Document}\t%文章的标题\n\\author{Y tq}\t%文章的作者\n\\date{\\today}\t%文档的时间，today表示今天\n\n\n% 正文区（文稿区）\n\\begin{document} %环境名称\n\t\\maketitle\t%输出标题,letter类没有maketitle\n\tHello World!\n\t\n\t%空一行表示产生新的段落,多个空行看做一个空行,\\\\表示换行\n\tLet $f(x)$ be defined by the formula\n\t$$f(x)=3x^2+x-1$$.\n\t% $ $内表示行内公式 $$ $$表示行公式\n\\end{document}\n```\n\neg:\n\n```latex\n\\documentclass{article}\n\\usepackage{ctex}\n\n\n\\title{\\heiti 第一次使用latex}\n\\author{\\kaishu yutianqi}\n\\date{\\today}\n\n\\begin{document}\n\t\\maketitle\n\tHello World \\LaTeX.\n\t\n\tLet $f(x)$ be defined by the formula\n\t$$f(x)=3x^2+x-1$$.\n\t\n\t勾股定理可以用现代语言表述如下：\n\t\n\t直角三角形斜边的平方等于两腰的平方和。\n\t\n\t可以用符号语言表述为：设直角三角形 $ABC$, 其中 $\\angle C=90^\\circ$,则有：\n\t\\begin{equation}\n\t\tAB^2 = BC^2 + AC^2.\n\t\\end{equation}\n\t\n\\end{document}\n```\n\n\n\n## 2.字体设置\n\n```latex\n\\documentclass[10pt]{article}\n\n\\usepackage{ctex}\n\\newcommand{\\myfont}{\\textit{\\textbf{\\textsf}}}\n\n\\begin{document}\n\t%字体族设置（罗马字体，无衬线字体，打字机字体）\n\t\\textrm{Roman Family} \\textsf{Sans Serif} \\texttt{Typerwriter Family}\n\t%这种是声明大括号内的字体\n\t\\rmfamily Roman Family {\\sffamily Sans Serif} {\\ttfamily Typewriter Family}\n\t%这种是声明命令之后的字体，大括号对文本分组限定命令作用的范围\n\t\n\t%字体系列设置（粗细，宽度）\n\t\\textmd{Medium Series} \\textbf{Boldface Series}\n\t\n\t{\\mdseries Medium Serises} {\\bfseries Boldface Series}\n\t%字体形状设置（直立，斜体，伪斜体，小型大写）\n\t\\textup{Upright Shape} \\textit{Italic Shape}\n\t\\textsl{Slanted Shape} \\textsc{Small Caps Shape}\n\t\n\t{\\upshape Upright Shape} {\\itshape Italic Shape} {\\slshape Slanted Shape} {\\scshape Small Caps Shape}\n\t\n\t%中文字体 \\quad是空格\n\t{\\songti 宋体} \\quad {\\heiti 黑体} \\quad {\\fangsong 仿宋} \\quad {\\kaishu 楷书}\n\t\n\t中文字体的\\textbf{粗体}与\\textit{斜体}\n\t\n\t%字体大小\n\t{\\tiny\t\t\t\thello}\\\\\n\t{\\scriptsize\t\thello}\\\\\n\t{\\footnotesize\t\thello}\\\\\n\t{\\small\t\t\t\thello}\\\\\n\t{\\normalsize\t\thello}\\\\\n\t{\\large\t\t\t\thello}\\\\\n\t{\\Large\t\t\t\thello}\\\\\n\t{\\LARGE\t\t\t\thello}\\\\\n\t{\\huge\t\t\t\thello}\\\\\n\t{\\Huge\t\t\t\thello}\\\\\n\t%双斜杠是换行\n\t\n\t%中文自豪设置命令\n\t\\zihao{-0} 你好!\n\t\n\\end{document}\n```\n\n## 3.文档的基本结构\n\n```latex\n\\documentclass{article}\n\n\\usepackage{ctex}\n\n\\begin{document}\n\t\n\t%构建提纲\n\t\\section{引言}\n\t\\section{试验方法}\n\t\n\t\\chapter{绪论}\t\t\t%chapter（章节）只在book类型中有\n\t\\section{研究的目的和意义}\n\t\\section{国内外研究现状}\n\t\\subsection{国内研究现状}\n\t\\subsection{国外研究现状}\n\t\\section{研究内容}\n\t\\section{研究方法与技术路线}\n\t\\subsection{研究内容}\n\t\\subsection{技术路线}\n\t\\chapter{试验与结果分析}\n\t\\section{引言}\n\t\\section{试验方法}\n\t\\section{试验结果}\n\t\\subsection{数据}\n\t\\subsection{图表}\n\t\\subsubsection{试验条件}\n\t\\subsubsection{试验过程}\n\t\\subsection{结果分析}\n\t\\section{结论}\n\t\\section{致谢}\n\t\n\\end{document}\n```\n\n## 4.特殊字符\n\n```latex\n\\documentclass{article}\n\\usepackage{ctex}\n\\begin{document}\n\t%空白字符 \n\t\\quad  \\+空格\n\t%待添加。。。\n\\end{document}\n```\n\n## 5.插入图片\n\n```latex\n\\documentclass{article}\n\\usepackage{ctex}\n\\usepackage{graphicx}\t\t%使用此宏包实现插图\n\\graphicspath{{figures/},{pics/}} %图片在当前路径下的figure目录，指定图片搜索路径,可以分组！！一定是两个大括号\n\\begin{document}\n\t\\includegraphics[选项]{文件名}\n\t% 格式 EPS,PDF,PNG,JPEG,BMP\n\t选项：\n\tscale=0.3 缩放因子\n\theight=2cm 图像高度\n\twidth=2cm 图像宽度\n\theight=0.1\\textheight\t原文本高度的0.1倍的高度\n\twidth=0.2\\textwidth\n\tangle=-45 旋转角度\n\t参数间用逗号分隔\n\t\n\\end{document}\n```\n\n## 6.表格\n\n```latex\n\\documentclass{article}\n\\usepackage{ctex}\n\\begin{document}\n\t\t\\begin{tabular}{|l||c|c|c|p{1.5cm}|} %l,c,r，左，中，右，对齐方式，|添加分隔线p产生指定宽度的表列，会自动换行\n\t\t\\hline\n\t\t姓名 & 语文 & 数学 & 外语 & 备注\\\\\n\t\t\\hline \\hline\n\t\t张三 & 87 & 100 & 93 & 优秀\\\\\n\t\t\\hline\n\t\t李四 & 75 & 64 & 52 & 补考另行通知\\\\\n\t\t\\hline\n\t\t王二 & 80 & 82 & 78 & \\\\\n\t\t\\hline\n\t\\end{tabular}\n\\end{document}\n```\n\n## 7.浮动体\n\n相当于在文字流中浮动\n\n```latex\n\\documentclass{article}\n\\usepackage{ctex}\n\\usepackage{graphicx}\n\\begin{document}\n\t爆炒溜肥肠成本见图\\ref{fig-fwih}\n\t\\begin{figure}[htbp]\n\t\t\\centering\t%使浮动内容居中\n\t\t\\includegraphics[scale=0.3]{feichang}\n\t\t\\caption{爆炒肥肠}\\label{fig-fwih} %图片设置标题，也可适用于table中\n\t\\end{figure}\n\t\n\t当然，也可以在\\LaTeX{}中使用表\\ref{tab-score}\n\t\\begin{table}[htbp]\n\t\t\\centering\n\t\t\\caption{考试成绩单}\\label{tab-score}\n\t\t\\begin{tabular}{|l||c|c|c|p{1.5cm}|} %l,c,r，左，中，右，对齐方式，|添加分隔线p产生指定宽度的表列，会自动换行\n\t\t\\hline\n\t\t姓名 & 语文 & 数学 & 外语 & 备注\\\\\n\t\t\\hline \\hline\n\t\t张三 & 87 & 100 & 93 & 优秀\\\\\n\t\t\\hline\n\t\t李四 & 75 & 64 & 52 & 补考另行通知\\\\\n\t\t\\hline\n\t\t王二 & 80 & 82 & 78 & \\\\\n\t\t\\hline\n\t\\end{tabular}\n\t\\end{table}\n\t% figure 使图片浮动，tabular使表格浮动\n\\end{document}\n```\n\n## 8.数学公式初步\n\nLaTeX将排版内容分为文本模式和数学模式，文本模式用于普通文本排版，数学模式用于数学公式排版\n\n*1.行内公式*\n\n​\t1.$ a+b=b+a $\n\n1. \\(a+b=b+a\\)\n2. math环境：\\begin{math}a+b=b+a\\end{math}\n\n*2.上下标*：\n\n1. $3x^2-x+2=0,3x^{20}-x+2=0,3x^{a+b}$\n2. $a_0+a_1+a_{3+2x^2}$\n\n*3.希腊字母*\n\n$\\alpha,\\beta,\\gamma,\\epsilon,\\pi,\\omega,\\Gamma,\\Delta$\n\n$\\Theta,\\Pi,\\Omega$\n\n$\\alpha^3+\\beta^2+\\gamma$\n\n*4.数学函数*\n\n1. $\\log,\\log^2_3,\\log_3^2$ \n2. $\\sin,\\cos,\\sin^2x+\\cos^2x=1$\n3. $\\arcsin,\\arccos$\n4. $\\ln$\n5. $\\sqrt2,\\sqrt{x^2+y^2},\\sqrt{2+\\sqrt2},\\sqrt[4]3$\n6. $3/4,\\frac34,\\frac{x}{x^2+x+1},\\frac{\\sqrt{x-1}}{\\sqrt{x+1}},\\frac{1}{1+\\frac{1}{x}},\\sqrt{\\frac{x}{x^2+x+1}}$\n\n*5.行间公式*\n\n​\t$$ a+b=b+a $$\n\n\\[a+b=b+a\\] \t\t(注意：中括号左右都有反斜杠！)\n\n\\begin{displaymath}1+2=3\\end{displaymath}\n\n*6.自动编号公式*\n\n交换律公式：\\ref{eq:commutative}\n\n\\begin{equation}\n\n​\ta+b=b+a\t\\label{eq:commutative}(标签)\n\n\\end{equation}\n\n## 9.数学矩阵\n\n```latex\n\\documentclass{article}\n\\usepackage{ctex}\n\\usepackage{amsmath}\n\n\\begin{document}\n\t% 矩阵环境，&符号分隔列，\\\\符号分隔行\n\t\\[\n\t\\begin{matrix}\n\t\t0&1\\\\\n\t\t1&0\n\t\\end{matrix}\\qquad\n\t\\begin{pmatrix}\n\t\t0&1\\\\\n\t\t1&0\n\t\\end{pmatrix}\\qquad\n\t\\begin{bmatrix}\n\t0&1\\\\\n\t1&0\n\t\\end{bmatrix}\\qquad\n\t\\begin{Bmatrix}\n\t0&1\\\\\n\t1&0\n\t\\end{Bmatrix}\\qquad\n\t\\begin{vmatrix}\n\t0&1\\\\\n\t1&0\n\t\\end{vmatrix}\\qquad\n\t\\begin{Vmatrix}\n\t0&1\\\\\n\t1&0\n\t\\end{Vmatrix}\\qquad\n\t\\]\n\t\\[\n\tA = \\begin{pmatrix}\n\t\ta_{11}^2 & a_{12}^2 &a_{13}^2 \\\\\n\t\t0 & a_{22} & a_{23} \\\\\n\t\t0 & 0 & a_{33}\n\t\\end{pmatrix}\n\t\\]\n\t\n\t%矩阵中常用省略号 \\dots,\\vdots,\\ddots\n\t\\[\n\tA = \\begin{bmatrix}\n\ta_{11} & \\dots &a_{1n} \\\\\n\t&\\ddots & \\vdots \\\\\n\t0 & & a_{nn}\n\t\\end{bmatrix}_{n \\times n}\n\t\\]\n\t\n\t%分块矩阵（矩阵嵌套）\n\t\\[\n\t\t\\begin{pmatrix}\n\t\t\t\\begin{matrix}\n\t\t\t\t1&0\\\\0&1\n\t\t\t\\end{matrix} & \\text{\\Large 0}\\\\\n\t\t\t\\text{\\Large 0} & \\begin{matrix}\n\t\t\t1&0\\\\0&-1\n\t\t\t\\end{matrix}\n\t\t\\end{pmatrix}\n\t\\]\n\t\\[\n\t\\begin{pmatrix}\n\t\ta_{11} & a_{12} & \\cdots &a_{1n}\\\\\n\t\t&a_{22}& \\cdots & a_{2n}\\\\\n\t\t&\t   & \\ddots & \\vdots\\\\\n\t\t\\multicolumn{2}{c}{\\raisebox{1.3ex}[0pt]{\\Huge 0}}\n\t\t&\t   &a_{nn}\t\n\t\\end{pmatrix}\n\t\\]\n\t% 跨列省略号：\\hdotsfor{columns}\n\t\\[\n\t\\begin{pmatrix}\n\t\t1 & \\frac 12 & \\dots & \\frac 1n\\\\\n\t\t\\hdotsfor{4}\\\\\n\t\tm & \\frac m2 & \\dots & \\frac mn\n\t\\end{pmatrix}\n\t\\]\n\t\n\t%行内小矩阵 (smallmatrix) 环境 \n\t复数 $z = (x,y)$ 也可以用矩阵\n\t\\begin{math}\n\t\t\\left(% 需要手动加上左括号\n\t\t\\begin{smallmatrix}\n\t\tx & -y \\\\ y & x\n\t\t\\end{smallmatrix}\n\t\t\\right)%\n\t\\end{math}来表示。\n\t\n\t% array环境（类似于表格环境tabular）\n\t\\[\n\t\\begin{array}{r|r}\n\t\\frac12 & 0 \\\\\n\t\\hline\n\t0 & -\\frac abc \\\\\n\t\n\t\\end{array}\n\t\\]\n%\t% 用array环境构造复杂矩阵\n%\t\\[\n%\t% @{<内容>}-添加任意内容，不占表项技术\n%\t% 此处添加一个负值空白，表示向左移 -5pt的距离\n%\t\\begin{array}{c@{\\hspace{-5pt}}l}\n%\t%第一行，第一列\n%\t\\left(\n%\t\\begin{array}{ccc|ccc}\n%\ta & \\cdots & a & b & \\cdots & b\\\\\n%\t& \\ddots & \\vdots & \\vdots & \\\\\n%\t&\t\t & a & b \\\\ \\hline\n%\t& \t\t &   & \\vdots & & \\vdots\\\\\n%\t\\multicolumn{2}{c|}{\\raisebox{2ex}[0pt]{\\Huge 0}}\n%\t& c & \\cdots & c\n%\t\\end{array}\n%\t\\right)\n%\t\\end{array}\n%\t\n%\t\n%\t\\]\n\t\n\\end{document}\n```\n\n\n\n## 10.数学公式的多行公式\n\n```latex\n\\documentclass{article}\n\\usepackage{ctex}\n\\usepackage{amsmath}\n\\usepackage{amssymb}\n\n\\begin{document}\n\t\\begin{gather}\n\t\t%带编号,\\notag组织编号\n\t\ta+b = b+a\\\\\n\t\tab = ba \\notag \\\\\n\t\ta^b\n\t\\end{gather}\n\t\n\t\\begin{gather*}\n\t\t%不带编号\n\t\t3+5=8\\\\\n\t\t3 \\times 5 = 15\n\t\\end{gather*}\n\t%align 和 aligh* 环境(用&进行对齐,&的位置代表公式对齐的位置！)\n\t\\begin{align}\n\t\tx &=t + \\cos t + 1\\\\\n\t\ty &=2\\sin t\n\t\\end{align}\n\t\\begin{align*}\n\t\tx &= t & x &= \\cos t & x &= t \\\\\n\t\ty &= 2t & y &= \\sin(t+1) & y &= \\sin t\n\t\\end{align*}\n\t% split 环境 （对齐采用 align 环境的方式，编号在中间）\n\t\\begin{equation}\n\t\t\\begin{split}\n\t\t\t\\cos 2x &= \\cos^2 x - \\sin^2 x \\\\\n\t\t\t&= 2\\cos^2 x - 1\n\t\t\\end{split}\n\t\\end{equation}\n\t% cases环境\n\t% 每行公式中使用 & 分隔为两部分，\n\t% 通常表示值和后面的条件\n\t\\begin{equation}\n\tD(x) = \\begin{cases}\n\t1, & \\text{如果 } x \\in \\mathbb{Q}; \\\\\n\t0, & \\text{如果 } x \\in \\mathbb{R}\\setminus \\mathbb{Q}.\n\t\\end{cases}\n\t% 一定要使用text命令实现文本模式，实现中文排版，\n\t\\end{equation}\n\t\n\t\n\\end{document}\n```\n\n\n\n## 11.自定义命令和环境\n\n```latex\n\\newcommand<命令>[<参数个数>][<参数默认值>]{<具体定义>}\neg: \\newcommand\\PRC{People`s Republic of \\emph{China}}\n% \\newcommand也可以使用参数\n% 参数个数可以从1到9，使用时用 #1,#2,......,#9 表示\neg:\n\\newcommand\\lovexs[2]{#1 喜欢 #2}\n\\newcommand\\hatedby[2]{#2 不受 #1 喜欢}\n\\loves{猫}{鱼}\n\\hatedby{狗}{萝卜}\n% \\newcommand的参数也可以有默认值\n% 指定参数格式的同时指定了首个参数的默认值，那么这个命令的\n% 第一个参数就成为可选的参数(要使用中括号指定)\neg:\n\\newcommand[3][喜欢]{#2#1#3}\n% \\renewcommand-重新定义已有的命令\n% 与\\newcommand 命令作用和用法相同，但只能用于已有的命令\n% \\renewcommand<命令>[<参数个数>][<参数默认值>]{<具体定义>}\neg:\n\\renewcommand\\abstractname{内容简介}\n% 该命令会被abstract环境自动调用\n\n%定义和重新定义环境\n% \\newenvironment{<环境名称>}[<参数个数>][<首参数默认值>]{<环境前定义>}{<环境后定义>}\n% \\renewenvironment{<环境名称>}[<参数个数>][<首参数默认值>]{<环境前定义>}{<环境后定义>}\n```\n\n",
+      "data": {
+        "title": "LaTex的基本语法",
+        "date": "2020-10-24 11:38:23",
+        "tags": [],
+        "published": true,
+        "hideInList": false,
+        "feature": "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=315877498,4102939927&fm=26&gp=0.jpg",
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "latex-de-ji-ben-yu-fa"
+    },
+    {
+      "content": "\n^表示上标，\n$$\na^1\n$$\n_表示下标，\n$$\nx_1\n$$\n如果上（下）标内容多于一个字符就需要使用{}，注意不是( ), 因为( )经常是公式本身组成部分，为避免冲突，所以选用了{ } 将其包起来。\n$$\nx^{y^z}=(1+e^x)^{-2xy^w}\n$$\n效果：xyz=(1+ex)−2xyw \n上面输入的上下标都是在字符的右侧，要想在左侧或者两侧都写上下标，那么需要使用\\sideset语法。\n$$\n\\sideset {12}{^3_4} \\bigotimes\n$$\n效果：12⨂34 \n\n## 3.3 括号和分隔符\n\n( )和[ ]就是自身了，由于{ } 是Tex的元字符，所以表示它自身时需要转义。\n\n示例：\n$$\nf(x,y) = x^2 + y^2, x\\epsilon[0,100]\n$$\n效果：f(x,y)=x2+y2,xϵ[0,100] \n有时候括号需要大号的，普通括号不好看，此时需要使用\\left和\\right加大括号的大小。\n\n示例：\n$$\n(\\frac{x}{y})^8，\\left(\\frac{x}{y}\\right)^8\n$$\n效果：(xy)8，(xy)8 \n\\left和\\right必须成对出现，对于不显示的一边可以使用 . 代替。\n\n示例：\n$$\n\\left.\\frac{{\\rm d}u}{{\\rm d}x} \\right| _{x=0}\n$$\n效果：dudx∣∣x=0 \n\n## 3.4 分数\n\n使用\\frac{分子}{分母}格式，或者 分子\\over 分母。\n\n示例：\n$$\n\\frac{1}{2x+1}或者\n$$\n\n$$\n1\\over{2x+1}\n$$\n\n效果：12x+1或者12x+1 \n\n## 3.5 开方\n\n示例：\n$$\n\\sqrt[9]{3}和\\sqrt{3}\n$$\n\n\n效果：3‾‾√9 和 3‾‾√ \n\n## 3.6 省略号\n\n有两种省略号，\\ldots 表示语文本底线对其的省略号，\\cdots表示与文本中线对其的省略号。\n\n示例：\n$$\nf(x_1, x_2, \\ldots, x_n)=x_1^2 + x_2^2+ \\cdots + x_n^2\n$$\n效果：f(x1,x2,…,xn)=x21+x22+⋯+x2n \n\n## 3.7 矢量\n\n示例：\n$$\n\\vec{a} \\cdot \\vec{b}=0\n$$\n效果: a⃗ ⋅b⃗ =0 \n\n## 3.8 积分\n\n示例：\n$$\n\\int_0^1x^2{\\rm d}x\n$$\n效果： ∫10x2dx \n\n## 3.9 极限\n\n示例：\n$$\n\\lim_{n\\rightarrow+\\infty}\\frac{1}{n(n+1)}\n$$\n效果： limn→+∞1n(n+1) \n\n## 3.10 累加、累乘\n\n示例：\n$$\n\\sum_1^n\\frac{1}{x^2}，\\prod_{i=0}^n\\frac{1}{x^2}\n$$\n效果：∑n11x2， ∏ni=01x2 \n\n## 3.11 希腊字母\n\n希腊字符示例：\n$$\n\\alpha A　\\beta B　\\gamma \\Gamma  \\delta\\Delta　\\epsilon　E \\varepsilon　　\\zeta　Z　\\eta　H　\\theta　\\Theta　\\vartheta \\iota　I\n$$\n\n$$\n\\kappa　K　\\lambda　\\Lambda　\\mu　M　\\nu　N \\xi　\\Xi　o　O　\\pi　\\Pi　\\varpi　　\\rho　P \\varrho　　\\sigma　\\Sigma　\n$$\n\n$$\n\\varsigma　　\\tau　T　\\upsilon　\\Upsilon \\phi　\\Phi　\\varphi　　\\chi　X　\\psi　\\Psi　\\omega　\\Omega\n$$\n\n\n\n效果：\n\n\nα　A　β　B　γ　Γ　δ　Δ　ϵ　Eε　　ζ　Z　η　H　θ　Θ　ϑι　I　κ　K　λ　Λ　μ　M　ν　Nξ　Ξ　o　O　π　Π　ϖ　　ρ　Pϱ　　σ　Σ　ς　　τ　T　υ　Υϕ　Φ　φ　　χ　X　ψ　Ψ　ω　Ω\n\n## 3.12 数学符号大汇总\n± ：\\pm \n× ：\\times \n÷：\\div \n∣：\\mid\n$$\n\\pm \\times \\div \\mid fsf\\mid\n$$\n\n⋅：\\cdot \n∘：\\circ \n∗: \\ast \n⨀：\\bigodot \n⨂：\\bigotimes \n⨁：\\bigoplus \n≤：\\leq \n≥：\\geq \n≠：\\neq \n≈：\\approx \n≡：\\equiv \n∑：\\sum \n∏：\\prod \n∐：\\coprod\n\n### 集合运算符： \n∅：\\emptyset \n∈：\\in \n∉：\\notin \n⊂：\\subset \n⊃ ：\\supset \n⊆ ：\\subseteq \n⊇ ：\\supseteq \n⋂ ：\\bigcap \n⋃ ：\\bigcup \n⋁ ：\\bigvee \n⋀ ：\\bigwedge \n⨄ ：\\biguplus \n⨆：\\bigsqcup\n\n对数运算符： \nlog ：\\log \nlg ：\\lg \nln ：\\ln\n\n三角运算符： \n⊥：\\bot \n∠：\\angle \n30∘：30^\\circ \nsin ：\\sin \ncos ：\\cos \ntan ：\\tan \ncot ：\\cot \nsec ：\\sec \ncsc ：\\csc\n\n微积分运算符： \ny′x：\\prime \n∫：\\int \n∬ ：\\iint \n∭ ：\\iiint \n⨌：\\iiiint \n∮ ：\\oint \nlim ：\\lim \n∞ ：\\infty \n∇：\\nabla\n\n### 逻辑运算符：\n\n∵：\\because \n∴ ：\\therefore \n∀ ：\\forall \n∃ ：\\exists \n≠ ：\\not= \n≯：\\not> \n⊄：\\not\\subset\n\n### 戴帽符号： \nŷ ：\\hat{y} \nyˇ：\\check{y} \ny˘：\\breve{y}\n\n### 连线符号： \na+b+c+d⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯：\\overline{a+b+c+d} \na+b+c+d⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯：\\underline{a+b+c+d} \na+b+c⏟1.0+d2.0：\\overbrace{a+\\underbrace{b+c}_{1.0}+d}^{2.0}\n$$\n\\underline{a+b+c+d}\n$$\n\n$$\n\\overline{a+b+c+d}\n$$\n\n$$\n\\overbrace{a+\\underbrace{b+c}_{1.0}+d}^{2.0}\n$$\n\n\n\n### 箭头符号： \n↑：\\uparrow \n↓：\\downarrow \n⇑ ：\\Uparrow \n⇓：\\Downarrow \n→：\\rightarrow \n← ：\\leftarrow \n⇒ ：\\Rightarrow \n⇐ ：\\Leftarrow \n⟶ ：\\longrightarrow \n⟵ ：\\longleftarrow \n⟹：\\Longrightarrow \n⟸ ：\\Longleftarrow\n\n## 3.13 需要转义的字符\n\n要输出字符　空格　#　$　%　&　_　{　}　，用命令：　\\空格　#　\\$　\\%　\\&　_　{　}\n\n## 3.14 使用指定字体\n\n{\\rm text}如： \n使用罗马字体：text text \n其他的字体还有： \n\\rm　　罗马体　　　　　　　\\it　　意大利体 \n\\bf　　黑体　　　　　　　　\\cal 　花体 \n\\sl　　倾斜体　　　　　　　\\sf　　等线体 \n\\mit 　数学斜体　　　　　　\\tt　　打字机字体 \n\\sc　　小体大写字母\n\n${\\ masdf}$ \n\n\n\n<center>居中</center>\n\n~~删除线~~\n\n[希腊字母](逻辑运算符:)\n\n\n\n```python\na = []\nprint(a)\n```\n\n> 功夫不是一天练成的\n\n- [ ] asfd\n- [x] asdfa\n- [x] \n\n你可以使用脚注像这样[^脚注]\n\n[^脚注]: 这里写脚注的*文本*\n\n :athletic_shoe:  :smile:  :+1: :cry:  :dash:   :heart: :kissing_heart: \n\n:wea \t\n\n比方说这里是[^1]\n\n[^1]:这里是1说的内容\n\n---\n\n***\n\n分隔线\n\n==发赛风==\n\n_asdf_\n\n*adfasdf*\n\n**asdfasfd**\n\n<u>下划线</u>                          :a: :baby_bottle:\n\n<!--comment-->\n\n\n\n[返回目录](#markdown数学符号)\n",
+      "data": {
+        "title": "markdown数学符号(typora)",
+        "date": "2020-10-24 11:31:05",
+        "tags": [],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "markdown-shu-xue-fu-hao-typora"
+    },
+    {
+      "content": "```c++\n#include <iostream>\n#include <string>\n#include <algorithm>\n#include <map>\n#include <vector>\nusing namespace std;\nconst int maxn = 100;\n\nvoid Selection_Sort(int *a,int n){\n    for(int i=0;i<n;i++){ //每次找出第i位置的最小值\n        for(int j=i+1;j<n;j++){\n            if(a[j]<a[i]){\n                swap(a[i],a[j]);\n            }\n        }\n    }\n}\n\nvoid Bubble_Sort(int *a,int n){\n    for(int i=0;i<n-1;i++){\n        for(int j=0;j<n-1-i;j++){\n            if(a[j]>a[j+1]){\n                swap(a[j],a[j+1]);\n            }\n        }\n    }\n}\n\nvoid Insertion_Sort(int *a,int n){\n    int tmp=0;\n    int j;\n    for(int i=1;i<n;i++){\n        tmp = a[i];\n        for(j=i-1;j>=0&&a[j]>tmp;j--){\n                a[j+1] = a[j];\n        }\n        a[j+1] = tmp;\n    }\n}\n\nvoid merge(int *a,int l1,int r1,int l2,int r2){\n    int i = l1;\n    int j = l2;\n    int temp[maxn],index=0;\n    while(i<=r1&&j<=r2){\n        if(a[i]<=a[j]){\n            temp[index++] = a[i++];\n        }else{\n            temp[index++] = a[j++];\n        }\n    }\n    while(i<=r1) temp[index++] = a[i++];\n    while(j<=r2) temp[index++] = a[j++];\n    for(int i=0;i<index;i++){\n        a[l1+i] = temp[i];\n    }\n}\n\nvoid Merge_Sort(int *a,int left,int right){\n    if(left<right){\n        int mid = (left+right)/2;\n        Merge_Sort(a, left, mid);\n        Merge_Sort(a, mid+1, right);\n        merge(a, left, mid, mid+1, right);\n    }\n}\n\nvoid merge_sort(int *a,int n){\n    for(int step=2;step/2<=n;step*=2){\n        for(int i=0;i<=n;i+=step){\n            int mid = i+step/2-1;\n            if(mid+1<=n){\n                merge(a, i, mid, mid+1, min(i+step-1,n));\n                // sort(a+i,a+min(i+step,n+1));\n            }\n        }\n    }\n}\n\nint Partition(int *a,int left,int right){\n    int tmp = a[left];\n    while(left<right){\n        while(a[right]>tmp)right--;\n        swap(a[right],a[left]);\n        while(a[left]<tmp)left++;\n        swap(a[left],a[right]);\n    }\n    return left;\n}\n\nvoid Quick_Sort(int *a,int left,int right){\n    if(left<right){\n        int index = Partition(a, left, right);\n        Quick_Sort(a,left,index-1);\n        Quick_Sort(a,index+1,right);\n    }\n}\n\nvoid Shell_sort(int *a,int n){\n    int h=1;\n    while(h<n/3) h = 3*h+1;\n    while(h>=1){\n        for(int i=h;i<n;i++){\n            for(int j=i;j>=h&&a[j]<a[j-h];j-=h){\n                swap(a[j],a[j-h]);\n            }\n        }\n        h = h/3;\n    }\n}\n\nvoid Print(int *a,int n){\n    for(int i=0;i<n;i++){\n        if(i!=0) cout<<\" \";\n        cout<<a[i];\n    }\n}\n\nint main(){\n    int a[10] = {72,6,57,88,60,42,83,73,48,85};\n    Print(a, 10);\n    return 0;\n}\n\n```\n\n![](https://images2018.cnblogs.com/blog/849589/201804/849589-20180402133438219-1946132192.png)\n",
+      "data": {
+        "title": "几种基本排序算法(待补充)",
+        "date": "2020-10-24 11:25:01",
+        "tags": [
+          "算法",
+          "c++"
+        ],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "ji-chong-ji-ben-pai-xu-suan-fa-dai-bu-chong"
+    },
+    {
+      "content": "![](https://peapio.github.io/post-images/1599368573964.png)\n        断断续续使用vim已经一年多的时间,期间也折腾过不少次配置文件,现在使用的vim已经和当时完全不同了,所以想通过博客记录一下,如果以后有人能看到这篇博客,希望能对你有一点点帮助.\n        对我而言,使用vim写的最多的就是c++算法题了,所以这份配置主要安装的都是c++有关的插件(其实也没有多少),不过就算改成其他的语言编辑器也很方便.\n        这份配置参考了许多别人的vim配置,包括 spacevim thinkvim, vimplus,我只挑选了它们其中一些我认为非常使用的插件和配置,最终构成了这份我用起来很顺手的neovim,\n        我认为对vim本身的配置基本大同小异,最主要的还是插件,使用的插件会大大提升编辑效率,所以这篇文章我会主要推荐一些插件.\n        ## 插件管理器 vim-plug\n简洁使用(据说) ,不过确实安装插件非常方便,只要使用格式\n```vimscript\ncall plug#begin('~/.config/nvim/vim/plugged')\nPlug '你想要安装的插件'    \ncall plug#end()\n```\n并且可以懒加载,\n```\nPlug 'voldikss/vim-floaterm',        { 'on': 'FloatermNew' }         \"在指定命令下才加载文件\nPlug 'vim-scripts/fcitx.vim',      {'for': ['markdown','cpp','vim','sh']}    \"在指定文件格式下加载文件\n```\n```\n\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\n\" 插件安装\n\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\ncall plug#begin('~/.config/nvim/vim/plugged')\n\"美化插件\nPlug 'hardcoreplayers/spaceline.vim'\nPlug 'hardcoreplayers/vim-buffet'\nPlug 'luochen1990/rainbow'\nPlug 'kristijanhusak/vim-hybrid-material'\nPlug 'hardcoreplayers/oceanic-material'\nPlug 'mhartington/oceanic-next'\nPlug 'hardcoreplayers/dashboard-nvim'\nPlug 'morhetz/gruvbox'\nPlug 'octol/vim-cpp-enhanced-highlight',{'for':'cpp'} \" c++高亮\nPlug 'Yggdroot/indentLine'                            \" 缩进可视化\nPlug 'ryanoasis/vim-devicons'                         \" 给各种插件增加文件图标\nPlug 'chrisbra/changesPlugin'                         \" 文件修改提示\nPlug 'itchyny/vim-cursorword'                         \" 光标在单词上会有一个下划线\nPlug 'kristijanhusak/defx-icons'\n\"功能插件 :使用更顺畅\nPlug 'gcmt/wildfire.vim'                                                                  \" 智能选中enter\nPlug 'suan/vim-instant-markdown',  {'for': 'markdown'}                                    \" markdown预览\nPlug 'dhruvasagar/vim-table-mode', {'on':'TableModeToggle'}                               \" 更规范的表格\nPlug 'kshenoy/vim-signature'                                                              \" 书签跳转，ma\nPlug 'junegunn/vim-easy-align'                                                            \" 快速对齐 ,a2<space>第二个空格对齐，,a-<space>倒数，,a*<space>所有，,a<Enter>*<space>右对齐\nPlug 'easymotion/vim-easymotion',  {'on':['<Plug>(easymotion-w)','<Plug>(easymotion-b)']} \" 快速移动\nPlug 'terryma/vim-smooth-scroll'                                                          \" 平滑翻页\nPlug 'rhysd/clever-f.vim'                                                                 \" 智能F，搜索高亮，f跳转\nPlug 'rhysd/accelerated-jk'                                                               \" 加速jk键\nPlug 'tpope/vim-repeat'                                                                   \" 增强．功能，可以重复surround\nPlug 'junegunn/vim-slash'                                                                 \" 搜索后移动取消高亮\nPlug 'itchyny/screensaver.vim',    {'on': 'ScreenSaver'}                                  \" 屏幕保护程序\nPlug 'jiangmiao/auto-pairs'                                                               \" 自动补全括号\nPlug 'tpope/vim-commentary'                                                               \" 注释插件\nPlug 'tpope/vim-surround'                                                                 \" yss\"加＂号，csw'\" ＇修改成＂　ds'删除＇\nPlug 'vim-scripts/fcitx.vim',      {'for': ['markdown','cpp','vim','sh']}                 \" 切换中文不影响普通模式输入\n\" 功能插件:\nPlug 'dense-analysis/ale'                                                                                    \" 错误提示\nPlug 'neoclide/coc.nvim',            {'branch': 'release'}                                                   \" 自动补全\nPlug 'honza/vim-snippets'                                                                                    \" 代码片\nPlug 'yianwillis/vimcdoc'                                                                                    \" vim中文手册\nPlug 'mbbill/undotree',              {'on':'UndotreeToggle'}                                                 \" 撤销树（代码回滚）\nPlug 'junegunn/fzf',                 {'on':['Files', 'History', 'Colors', 'Rg', 'Marks'] }                   \" fzf模糊查找文件\nPlug 'junegunn/fzf.vim',             {'on':['Files', 'History', 'Colors', 'Rg', 'Marks']}\nPlug 'sbdchd/neoformat',             {'on':'Neoformat'}                                                      \" 格式化文件(我还没用过)leader>nf\nPlug 'voldikss/vim-floaterm',        { 'on': 'FloatermNew' }                                                 \" 浮动终端\nPlug 'liuchengxu/vista.vim',         {'on':'Vista'}                                                          \" 查看函数什么的\nPlug 'kristijanhusak/defx-git',      {'on':'Defx'}                                                           \" 查看文件树\nPlug 'Shougo/defx.nvim',             { 'do': ':UpdateRemotePlugins'}\nPlug 'tyru/open-browser.vim',        {'on':['<Plug>(openbrowser-smart-search)', '<Plug>(openbrowser-open)']} \" gx google搜索, gu打开连接\nPlug 'mg979/vim-visual-multi',       {'branch': 'master'}                                                    \" <c-n> 多鼠标操作\nPlug 'voldikss/vim-translator',      { 'on':'<Plug>Translate' }                                              \" 划词翻译 leader>tl\nPlug 'junegunn/goyo.vim',            {'on':'Goyo'}                                                           \" 专注模式gy开启\nPlug 'tweekmonster/startuptime.vim', {'on': 'StartupTime'}                                                   \" 查看启动所需时间\n\" 可选\n\"Plug 'sheerun/vim-polyglot',{'for':['c', 'h', 'cpp', 'py', 'go', 'java', 'vim', 'json', 'hs']}\n\"Plug 'vim-scripts/vim-auto-save'\n\"Plug 'kien/rainbow_parentheses.vim'\n\"Plug 'Yggdroot/LeaderF', { 'do': './install.sh' } \" 文件搜索\n\"Plug 'wakatime/vim-wakatime'                      \" 统计代码时间\n\"Plug 'SirVer/ultisnips'\n\"Plug 'rhysd/github-complete.vim'\n\"Plug 'simnalamburt/vim-mundo'                     \"  撤销树可视化\n\n\ncall plug#end()\n\n```\n\n",
+      "data": {
+        "title": "我的neovim的配置🐟",
+        "date": "2020-09-06 11:47:27",
+        "tags": [
+          "vim",
+          "linux",
+          "工具"
+        ],
+        "published": true,
+        "hideInList": false,
+        "feature": "/post-images/wo-de-neovim-de-pei-zhi.png",
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "wo-de-neovim-de-pei-zhi"
+    },
+    {
+      "content": "> 欢迎来到我的小站呀，很高兴遇见你！🤝\n\n## 🏠 关于本站\n        用来记录学习和生活的日常\n## 👨‍💻 博主是谁\n        - 计算机学生\n## ⛹ 兴趣爱好\n        捣鼓电脑\n## 📬 联系我呀\n        qq:2696845430\n",
+      "data": {
+        "title": "关于",
+        "date": "2019-01-25 19:09:48",
+        "tags": [],
+        "published": true,
+        "hideInList": true,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "about"
+    },
+    {
+      "content": "👏  欢迎使用 **Gridea** ！  \n✍️  **Gridea** 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ... \n\n<!-- more -->\n\n[Github](https://github.com/getgridea/gridea)  \n[Gridea 主页](https://gridea.dev/)  \n[示例网站](http://fehey.com/)\n\n## 特性👇\n📝  你可以使用最酷的 **Markdown** 语法，进行快速创作  \n\n🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片  \n\n🏷️  你可以对文章进行标签分组  \n\n📋  你可以自定义菜单，甚至可以创建外部链接菜单  \n\n💻  你可以在 **Windows**，**MacOS** 或 **Linux** 设备上使用此客户端  \n\n🌎  你可以使用 **𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌** 或 **Coding Pages** 向世界展示，未来将支持更多平台  \n\n💬  你可以进行简单的配置，接入 [Gitalk](https://github.com/gitalk/gitalk) 或 [DisqusJS](https://github.com/SukkaW/DisqusJS) 评论系统  \n\n🇬🇧  你可以使用**中文简体**或**英语**  \n\n🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力  \n\n🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步  \n\n🌱 当然 **Gridea** 还很年轻，有很多不足，但请相信，它会不停向前 🏃\n\n未来，它一定会成为你离不开的伙伴\n\n尽情发挥你的才华吧！\n\n😘 `Enjoy\n```c++\n#include <iostream>\nusing namespace std;\nint main(){\n    return 0;\n}\n```\nPowered by <a href=\"https://github.com/peapio\" target=\"_blank\">YTQi</a>\n",
+      "data": {
+        "title": "Hello Gridea",
+        "date": "2018-12-12 00:00:00",
+        "tags": [
+          "Gridea"
+        ],
+        "published": true,
+        "hideInList": true,
+        "feature": "/post-images/hello-gridea.png",
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "👏  欢迎使用 **Gridea** ！  \n✍️  **Gridea** 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ... ",
+      "fileName": "hello-gridea"
+    }
+  ],
+  "tags": [
+    {
+      "name": "mysql",
+      "slug": "rDzZ9McFg",
+      "used": true
+    },
+    {
+      "name": "算法",
+      "slug": "v1CGdPgHQ",
+      "used": true
+    },
+    {
+      "name": "c++",
+      "slug": "9X82v90Kok",
+      "used": true
+    },
+    {
+      "name": "vim",
+      "slug": "KnYlX8-Ub",
+      "used": true
+    },
+    {
+      "name": "linux",
+      "slug": "zUomk8knLP",
+      "used": true
+    },
+    {
+      "name": "工具",
+      "slug": "rGG5APZS0D",
+      "used": true
+    },
+    {
+      "name": "Gridea",
+      "slug": "VJDoiWTqb",
+      "used": true
+    }
+  ],
+  "menus": [
+    {
+      "link": "/",
+      "name": "首页",
+      "openType": "Internal"
+    },
+    {
+      "link": "/tags",
+      "name": "标签",
+      "openType": "Internal"
+    },
+    {
+      "link": "/post/about",
+      "name": "关于",
+      "openType": "Internal"
+    },
+    {
+      "link": "https://peapio.github.io/archives",
+      "name": "归档",
+      "openType": "Internal"
+    }
+  ]
+}

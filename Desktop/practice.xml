@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="style.css"?>
+<company>
+    <man>
+        <empno>101</empno>
+        <ename>小李</ename>
+        <job>经理</job>
+        <hiredate>2020-02-05</hiredate>
+        <sal>4300.0</sal>
+        <comm>341.5</comm>
+    </man>
+    <man>
+        <empno>102</empno>
+        <ename>小王</ename>
+        <job>组长</job>
+        <hiredate>2020-02-05</hiredate>
+        <sal>4300.0</sal>
+        <comm>341.5</comm>
+    </man>
+    <man>
+        <empno>103</empno>
+        <ename>小刘</ename>
+        <job>组员</job>
+        <hiredate>2020-02-05</hiredate>
+        <sal>4300.0</sal>
+        <comm>341.5</comm>
+    </man>
+</company>

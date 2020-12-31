@@ -1,0 +1,27 @@
+company
+{
+background-color: #ffffff;
+width: 100%;
+}
+man
+{
+display: inline-block;
+margin-bottom: 30pt;
+margin-left: 0;
+}
+empno
+{
+color: #FF0000;
+font-size: 20pt;
+}
+ename
+{
+color: #0000FF;
+font-size: 20pt;
+}
+job,hiredate,sal,comm
+{
+display: block;
+color: #f40;
+margin-left: 20pt;
+}
